@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  redis:
+    image: "redis:latest"
+    networks:
+      - my-net
+
+  db:
+    image: "mysql"
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - my-net
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./scripts/schema.sql:/docker-entrypoint-initdb.d/1.sql"
+  worker:
+    build: ./worker
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    restart: on-failure
+    networks:
+      - my-net
+
+  api:
+    build: ./api
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    restart: on-failure
+    networks:
+      - my-net
+    ports:
+      - "5001:5000"
+
+networks:
+  my-net:
