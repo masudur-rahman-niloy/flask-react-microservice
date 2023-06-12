@@ -5,10 +5,10 @@ import redis
 
 def get_connection():
     return connections.Connection(
-        host=os.environ.get('DB_HOST', 'sql.freedb.tech'),
-        user=os.environ.get('DB_USER', 'freedb_niloy'),
-        password=os.environ.get('DB_PASS', '!87x3C7z7?MMMfZ'),
-        database=os.environ.get('DB_DATABASE', 'freedb_redis-test'),
+        host=os.environ.get('DB_HOST', '127.0.0.1'),
+        user=os.environ.get('DB_USER', 'root'),
+        password=os.environ.get('DB_PASS', 'my-secret-pass'),
+        database=os.environ.get('DB_DATABASE', 'my-db'),
         port=int(os.environ.get('DB_PORT', 3306)),
         connect_timeout=5,
         cursorclass=cursors.DictCursor

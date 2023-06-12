@@ -2,10 +2,12 @@ from flask import Flask, request, make_response, Response
 from connections import get_connection, get_redis_connection
 import json
 import hashlib
+from flask_cors import CORS
 
 redis_connection = get_redis_connection()
 connection = get_connection()
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/get_data", methods=['POST'])
@@ -21,7 +23,8 @@ def get_data():
     if data is None:
         cache_hit = False
         data = read_from_db(sql)
-        print(f"db data--->>>", data)
+        print(f"sql--->>>", sql, flush=True)
+        print(f"db data--->>>", data, flush=True)
         if data is not None:
             print(f"cache set--->>>", data)
             set_in_cache(
@@ -73,7 +76,8 @@ def read_from_db(sql):
         connection.ping(reconnect=True)
         cur.execute(sql)
         result = cur.fetchone()
-        return result
+    connection.commit()
+    return result
 
 
 if __name__ == "__main__":

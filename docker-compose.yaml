@@ -41,5 +41,17 @@ services:
     ports:
       - "5001:5000"
 
+  frontend:
+    build: ./frontend
+    depends_on:
+      - api
+    env_file:
+      - .env
+    restart: on-failure
+    networks:
+      - my-net
+    ports:
+      - "3001:3000"
+
 networks:
   my-net:
